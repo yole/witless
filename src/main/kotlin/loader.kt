@@ -8,7 +8,7 @@ class StringReader(val data: String) {
     fun peek() = data[position]
 
     fun check(c: Char): Boolean {
-        if (peek() == c) {
+        if (!isEOF() && peek() == c) {
             position++
             return true
         }
@@ -26,7 +26,7 @@ fun StringReader.readDigit(): Int {
     throw IllegalArgumentException("Not a digit: $c")
 }
 
-fun StringReader.readPoint() = Point(readDigit(), readDigit())
+fun StringReader.readPoint(height: Int) = Point(readDigit(), height - readDigit())
 
 fun boardFromString(encodedBoard: String): Panel {
     val reader = StringReader(encodedBoard)
@@ -34,13 +34,15 @@ fun boardFromString(encodedBoard: String): Panel {
     val height = reader.readDigit()
     val result = Panel(width, height)
 
-    result.startLocations.add(reader.readPoint())
+    while (reader.peek() != ',' && reader.peek() != 'M') {
+        result.startLocations.add(reader.readPoint(height))
+    }
     if (reader.check('M')) {
-        result.mirrorStartLocation = reader.readPoint()
+        result.mirrorStartLocation = reader.readPoint(height)
     }
     reader.expect(',')
     while (!reader.isEOF() && reader.peek() != 'X') {
-        result.targetLocations.add(reader.readPoint())
+        result.targetLocations.add(reader.readPoint(height))
     }
 
     if (reader.check('X')) {
@@ -56,7 +58,7 @@ fun StringReader.loadHexes(panel: Panel) {
         return
     }
     while (!isEOF()) {
-        val point = readPoint()
+        val point = readPoint(panel.height)
         val location = readHexLocation()
         panel.putHex(point.x, point.y, location)
     }
@@ -139,9 +141,9 @@ fun Char.toDirection() = when(this) {
     else -> throw IllegalArgumentException("Unknown direction $this")
 }
 
-fun pathFromString(encodedPath: String): Path {
+fun pathFromString(encodedPath: String, height: Int): Path {
     val reader = StringReader(encodedPath)
-    val start = reader.readPoint()
+    val start = reader.readPoint(height)
     var result = Path(start)
     while (!reader.isEOF()) {
         result = result.append(reader.read().toDirection())
