@@ -28,9 +28,13 @@ class Panel(val width: Int, val height: Int) {
     var mirrorStartLocation: Point? = null
 
     val cells = Array(width) { arrayOfNulls<CellObject>(height) }
+
     val hexesAtIntersections = BooleanMap(width + 1, height + 1)
     val hexesRight = BooleanMap(width + 1, height + 1)
     val hexesBelow = BooleanMap(width + 1, height + 1)
+
+    val brokenLinesRight = BooleanMap(width + 1, height + 1)
+    val brokenLinesBelow = BooleanMap(width + 1, height + 1)
 
     val hexCount: Int
         get() = hexesAtIntersections.markCount + hexesRight.markCount + hexesBelow.markCount
@@ -61,10 +65,22 @@ class Panel(val width: Int, val height: Int) {
 
     fun hasHexAtIntersection(point: Point) = hexesAtIntersections[point]
 
-    fun hasHexAtLine(point: Point, direction: Direction) = when (direction) {
-        Direction.Right -> hexesRight[point]
-        Direction.Left -> hexesRight[point.x-1, point.y]
-        Direction.Down -> hexesBelow[point]
-        Direction.Up -> hexesBelow[point.x, point.y-1]
+    fun hasHexAtLine(point: Point, direction: Direction) = isLineMarked(point, direction, hexesRight)
+
+    private fun isLineMarked(point: Point, direction: Direction, linesRight: BooleanMap): Boolean {
+        return when (direction) {
+            Direction.Right -> linesRight[point]
+            Direction.Left -> linesRight[point.x - 1, point.y]
+            Direction.Down -> hexesBelow[point]
+            Direction.Up -> hexesBelow[point.x, point.y - 1]
+        }
+    }
+
+    fun addBrokenLineRight(point: Point) {
+        brokenLinesRight[point] = true
+    }
+
+    fun addBrokenLineBelow(point: Point) {
+        brokenLinesBelow[point] = true
     }
 }

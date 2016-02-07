@@ -15,6 +15,8 @@ class StringReader(val data: String) {
         return false
     }
 
+    fun peekNoneOf(vararg c: Char) = !isEOF() && c.none { data[position] == it }
+
     fun expect(c: Char) {
         if (data[position++] != c) throw IllegalArgumentException("$c expected")
     }
@@ -34,19 +36,22 @@ fun boardFromString(encodedBoard: String): Panel {
     val height = reader.readDigit()
     val result = Panel(width, height)
 
-    while (reader.peek() != ',' && reader.peek() != 'M') {
+    while (reader.peekNoneOf(',', 'M')) {
         result.startLocations.add(reader.readPoint(height))
     }
     if (reader.check('M')) {
         result.mirrorStartLocation = reader.readPoint(height)
     }
     reader.expect(',')
-    while (!reader.isEOF() && reader.peek() != 'X') {
+    while (reader.peekNoneOf('X', '/')) {
         result.targetLocations.add(reader.readPoint(height))
     }
 
     if (reader.check('X')) {
         reader.loadHexes(result)
+    }
+    if (reader.check('/')) {
+        reader.loadBrokenLines(result)
     }
 
     return result
@@ -57,10 +62,21 @@ fun StringReader.loadHexes(panel: Panel) {
         panel.fillIntersectionsWithHexes()
         return
     }
-    while (!isEOF()) {
+    while (peekNoneOf('/')) {
         val point = readPoint(panel.height)
         val location = readHexLocation()
         panel.putHex(point.x, point.y, location)
+    }
+}
+
+fun StringReader.loadBrokenLines(panel: Panel) {
+    while (peekNoneOf('/')) {
+        panel.addBrokenLineRight(readPoint(panel.width))
+    }
+    if (check('/')) {
+        while (!isEOF()) {
+            panel.addBrokenLineBelow(readPoint(panel.width))
+        }
     }
 }
 
