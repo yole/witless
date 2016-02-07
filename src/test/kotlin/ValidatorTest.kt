@@ -5,7 +5,7 @@ import org.junit.Assert.*
 
 class ValidatorTest {
     @Test fun polyminoSimple() {
-        val board = Board(3, 3)
+        val board = Panel(3, 3)
         board.startLocations.add(Point(0, 3))
         board.targetLocations.add(Point(0, 0))
 
@@ -17,7 +17,7 @@ class ValidatorTest {
     }
 
     @Test fun polyminoRotatedPath() {
-        val board = Board(4, 4)
+        val board = Panel(4, 4)
         board.startLocations.add(Point(0, 4))
         board.targetLocations.add(Point(4, 0))
         board[0, 2] = CellObject.Polymino.rotated(createTTetraminoMap())

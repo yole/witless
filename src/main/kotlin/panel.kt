@@ -22,7 +22,7 @@ sealed class CellObject() {
 
 enum class HexLocation { Intersection, Right, Below }
 
-class Board(val width: Int, val height: Int) {
+class Panel(val width: Int, val height: Int) {
     val startLocations = mutableListOf<Point>()
     val targetLocations = mutableListOf<Point>()
     var mirrorStartLocation: Point? = null

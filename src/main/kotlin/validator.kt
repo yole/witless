@@ -1,6 +1,6 @@
 package ru.yole.witless
 
-class Validator(val board: Board, val path: Path, val mirrorPath: Path? = null) {
+class Validator(val panel: Panel, val path: Path, val mirrorPath: Path? = null) {
     inner class Region {
         val points = mutableListOf<Point>()
         lateinit var map: BooleanMap
@@ -24,9 +24,9 @@ class Validator(val board: Board, val path: Path, val mirrorPath: Path? = null) 
         }
     }
 
-    val pathToRight = BooleanMap(board.width, board.height)
-    val pathBelow = BooleanMap(board.width, board.height)
-    val floodFilled = BooleanMap(board.width, board.height)
+    val pathToRight = BooleanMap(panel.width, panel.height)
+    val pathBelow = BooleanMap(panel.width, panel.height)
+    val floodFilled = BooleanMap(panel.width, panel.height)
 
     fun validate(): Boolean {
         if (!tracePath()) return false
@@ -41,13 +41,13 @@ class Validator(val board: Board, val path: Path, val mirrorPath: Path? = null) 
         if (mirrorPath != null) {
             hexesTaken += traceOnePath(mirrorPath)
         }
-        return hexesTaken == board.hexCount
+        return hexesTaken == panel.hexCount
     }
 
     private fun traceOnePath(path: Path): Int {
         var hexesTaken = 0
         var curPoint = path.start
-        if (board.hasHexAtIntersection(curPoint)) hexesTaken++
+        if (panel.hasHexAtIntersection(curPoint)) hexesTaken++
 
         for (direction in path.steps) {
             when (direction) {
@@ -56,11 +56,11 @@ class Validator(val board: Board, val path: Path, val mirrorPath: Path? = null) 
                 Direction.Down -> if (curPoint.x > 0) pathToRight[curPoint.x - 1, curPoint.y] = true
                 Direction.Up -> if (curPoint.x > 0) pathToRight[curPoint.x - 1, curPoint.y - 1] = true
             }
-            if (board.hasHexAtLine(curPoint, direction)) hexesTaken++
+            if (panel.hasHexAtLine(curPoint, direction)) hexesTaken++
             curPoint = curPoint.step(direction)
-            if (board.hasHexAtIntersection(curPoint)) hexesTaken++
+            if (panel.hasHexAtIntersection(curPoint)) hexesTaken++
         }
-        if (curPoint !in board.targetLocations) {
+        if (curPoint !in panel.targetLocations) {
             throw IllegalArgumentException("Path ends at $curPoint which is not a target location")
         }
         return hexesTaken
@@ -74,8 +74,8 @@ class Validator(val board: Board, val path: Path, val mirrorPath: Path? = null) 
     }
 
     private fun findUnfilledPoint(): Point? {
-        for (x in 0..board.width-1) {
-            for (y in 0..board.height-1) {
+        for (x in 0..panel.width-1) {
+            for (y in 0..panel.height-1) {
                 if (!floodFilled[x, y]) return Point(x, y)
             }
         }
@@ -86,9 +86,9 @@ class Validator(val board: Board, val path: Path, val mirrorPath: Path? = null) 
         if (floodFilled[point]) return
         floodFilled[point] = true
         add(point)
-        if (point.x < board.width-1 && !pathToRight[point]) floodFill(point.step(Direction.Right))
+        if (point.x < panel.width-1 && !pathToRight[point]) floodFill(point.step(Direction.Right))
         if (point.x > 0 && !pathToRight[point.x-1, point.y]) floodFill(point.step(Direction.Left))
-        if (point.y < board.height-1 && !pathBelow[point]) floodFill(point.step(Direction.Down))
+        if (point.y < panel.height-1 && !pathBelow[point]) floodFill(point.step(Direction.Down))
         if (point.y > 0 && !pathBelow[point.x, point.y-1]) floodFill(point.step(Direction.Up))
     }
 
@@ -98,7 +98,7 @@ class Validator(val board: Board, val path: Path, val mirrorPath: Path? = null) 
         val stars = BooleanArray(8)
         var blobColor: Color? = null
         for (point in points) {
-            val obj = board[point.x, point.y] ?: continue
+            val obj = panel[point.x, point.y] ?: continue
             obj.color?.let { colors[it.ordinal]++ }
             when (obj) {
                 is CellObject.Star -> {

@@ -25,13 +25,13 @@ fun main(args: Array<String>) {
     }
 }
 
-private fun findBestValidPath(board: Board): Path? {
+private fun findBestValidPath(panel: Panel): Path? {
     var bestPath: Path? = null
-    for (location in board.startLocations) {
-        val traverser = Traverser(board, location, board.mirrorStartLocation)
+    for (location in panel.startLocations) {
+        val traverser = Traverser(panel, location, panel.mirrorStartLocation)
         while (true) {
             val (path, mirrorPath) = traverser.buildNextPath() ?: break
-            if (Validator(board, path, mirrorPath).validate()) {
+            if (Validator(panel, path, mirrorPath).validate()) {
                 if (bestPath == null || bestPath.steps.size > path.steps.size) {
                     bestPath = path
                 }

@@ -1,11 +1,11 @@
 package ru.yole.witless
 
-class Traverser(val board: Board, val start: Point, val mirrorStart: Point?) {
+class Traverser(val panel: Panel, val start: Point, val mirrorStart: Point?) {
     var currentPath = Path(start)
     var mirrorPath = if (mirrorStart != null) Path(mirrorStart) else null
     var currentEnd = start
     var currentMirrorEnd = mirrorStart
-    var visited = BooleanMap(board.width + 1, board.height + 1)
+    var visited = BooleanMap(panel.width + 1, panel.height + 1)
     var tryDirection: Direction? = Direction.Right
 
     init {
@@ -23,7 +23,7 @@ class Traverser(val board: Board, val start: Point, val mirrorStart: Point?) {
                 }
                 tryDirection = retreatPath()
             }
-            if (currentEnd in board.targetLocations) {
+            if (currentEnd in panel.targetLocations) {
                 return currentPath to mirrorPath
             }
         }
@@ -65,5 +65,5 @@ class Traverser(val board: Board, val start: Point, val mirrorStart: Point?) {
         return lastStep.next()
     }
 
-    fun canStepTo(point: Point) = point.x in 0..board.width && point.y in 0..board.height && !visited[point]
+    fun canStepTo(point: Point) = point.x in 0..panel.width && point.y in 0..panel.height && !visited[point]
 }

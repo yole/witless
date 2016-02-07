@@ -28,11 +28,11 @@ fun StringReader.readDigit(): Int {
 
 fun StringReader.readPoint() = Point(readDigit(), readDigit())
 
-fun boardFromString(encodedBoard: String): Board {
+fun boardFromString(encodedBoard: String): Panel {
     val reader = StringReader(encodedBoard)
     val width = reader.readDigit()
     val height = reader.readDigit()
-    val result = Board(width, height)
+    val result = Panel(width, height)
 
     result.startLocations.add(reader.readPoint())
     if (reader.check('M')) {
@@ -50,15 +50,15 @@ fun boardFromString(encodedBoard: String): Board {
     return result
 }
 
-fun StringReader.loadHexes(board: Board) {
+fun StringReader.loadHexes(panel: Panel) {
     if (check('X')) {
-        board.fillIntersectionsWithHexes()
+        panel.fillIntersectionsWithHexes()
         return
     }
     while (!isEOF()) {
         val point = readPoint()
         val location = readHexLocation()
-        board.putHex(point.x, point.y, location)
+        panel.putHex(point.x, point.y, location)
     }
 }
 
@@ -118,12 +118,12 @@ fun StringReader.readCell(): CellObject? {
     }
 }
 
-fun loadCells(board: Board, encodedCells: String) {
+fun loadCells(panel: Panel, encodedCells: String) {
     val reader = StringReader(encodedCells)
-    for (y in 0..board.height-1) {
-        for (x in 0..board.width-1) {
+    for (y in 0..panel.height-1) {
+        for (x in 0..panel.width-1) {
             try {
-                board[x, y] = reader.readCell()
+                panel[x, y] = reader.readCell()
             } catch(e: IllegalArgumentException) {
                 throw IllegalArgumentException("Error reading at ($x,$y): ${e.message}")
             }
