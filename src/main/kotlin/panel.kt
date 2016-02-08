@@ -65,14 +65,21 @@ class Panel(val width: Int, val height: Int) {
 
     fun hasHexAtIntersection(point: Point) = hexesAtIntersections[point]
 
-    fun hasHexAtLine(point: Point, direction: Direction) = isLineMarked(point, direction, hexesRight)
+    fun hasHexAtLine(point: Point, direction: Direction) = isLineMarked(point, direction, hexesRight, hexesBelow)
 
-    private fun isLineMarked(point: Point, direction: Direction, linesRight: BooleanMap): Boolean {
+    fun canMove(fromPoint: Point, direction: Direction): Boolean {
+        if (isLineMarked(fromPoint, direction, brokenLinesRight, brokenLinesBelow)) {
+            return false
+        }
+        return true
+    }
+
+    private fun isLineMarked(point: Point, direction: Direction, linesRight: BooleanMap, linesBelow: BooleanMap): Boolean {
         return when (direction) {
             Direction.Right -> linesRight[point]
             Direction.Left -> linesRight[point.x - 1, point.y]
-            Direction.Down -> hexesBelow[point]
-            Direction.Up -> hexesBelow[point.x, point.y - 1]
+            Direction.Down -> linesBelow[point]
+            Direction.Up -> linesBelow[point.x, point.y - 1]
         }
     }
 

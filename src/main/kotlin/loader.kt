@@ -162,7 +162,7 @@ fun pathFromString(encodedPath: String, height: Int): Path {
     val start = reader.readPoint(height)
     var result = Path(start)
     while (!reader.isEOF()) {
-        result = result.append(reader.read().toDirection())
+        result = result.plus(reader.read().toDirection())
     }
     return result
 }

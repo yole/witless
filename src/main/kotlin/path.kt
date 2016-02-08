@@ -28,12 +28,8 @@ enum class Direction {
 }
 
 data class Path(val start: Point, val steps: List<Direction> = listOf()) {
-    fun append(direction: Direction) = Path(start, steps.plusElement(direction))
+    operator fun plus(direction: Direction) = Path(start, steps.plusElement(direction))
     fun retreat() = Path(start, steps.dropLast(1))
-
-    fun mirror(mirrorStart: Point, mirrorHorizontally: Boolean, mirrorVertically: Boolean): Path {
-        return Path(mirrorStart, steps.map { it.mirror(mirrorHorizontally, mirrorVertically) })
-    }
 
     override fun toString() = "$start -> ${stepsToString()}"
 

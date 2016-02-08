@@ -11,7 +11,7 @@ class ValidatorTest {
 
         board.set(0, 0, createTTetramino())
 
-        val path = pathFromString("03RURULUL")
+        val path = pathFromString("00RURULUL", 3)
         val result = Validator(board, path)
         assertTrue(result.validate())
     }
@@ -22,7 +22,7 @@ class ValidatorTest {
         board.targetLocations.add(Point(4, 0))
         board[0, 2] = CellObject.Polymino.rotated(createTTetraminoMap())
 
-        val path = pathFromString("04URDRUUULDLUURRRDDDDRUUUU")
+        val path = pathFromString("00URDRUUULDLUURRRDDDDRUUUU", 4)
         assertTrue(Validator(board, path).validate())
     }
 
