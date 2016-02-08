@@ -1,4 +1,4 @@
-= The Witless
+# The Witless
 
 This is an automated puzzle solving tool for [The Witness](http://the-witness.net/).
 Many puzzles in the game require solutions derived according to well-defined rules, and this program can solve some of such puzzles.
@@ -11,7 +11,7 @@ task). You will not accidentally see any spoilers for other puzzles when you loo
 (Also, encoding puzzles for the solver is intentionally quite cumbersome, so you'll often find that you can solve the puzzle in the game
 faster than it would take you to encode for the solver. However, if you're truly stuck, the encoding effort will not matter.)
 
-== Supported Puzzle Elements
+## Supported Puzzle Elements
 
  * Colored blobs
  * Colored stars
@@ -21,14 +21,14 @@ faster than it would take you to encode for the solver. However, if you're truly
  * Mirrored lines
  * Panels with broken lines
 
-== Currently Unsupported Puzzle Elements
+## Currently Unsupported Puzzle Elements
 
  * Non-square panels
  * White things with three points (like an inverted "Y" letter)
  * Little unfilled blue squares
  * Any other weird things you may find in the game
 
-== Running The Witless
+## Running The Witless
 
  * Make sure you have the Java Development Kit installed. You can download it from the [Oracle site](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
  * Create a file named "puzzle.txt" in the directory where you've checked out The Witless, and put your puzzle there. See below for encoding details.
@@ -36,7 +36,7 @@ faster than it would take you to encode for the solver. However, if you're truly
  * On Mac and Linux, run "./gradlew run" from the checkout directory.
  * The puzzle solution will be printed to the standard output.
 
-== Encoding the Puzzle
+## Encoding the Puzzle
 
 The first line specifies the panel configuration. Here's an example:
 
