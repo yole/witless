@@ -49,21 +49,58 @@ After the start locations, put a comma and list the target locations in the same
 
 If the panel uses mirrored lines, put an "M" after the first start location and put the coordinates of the mirror start, for example:
 
-   4400M44,0440
+    4400M44,0440
 
 If the panel contains hexes, put in an "X" sign and list the coordinates of each hex, followed by its position relative to the
 corresponding intersection of lines ("I" if it's at the intersection itself, "B" if it's below or "R" if it's to the right). Example:
 
-   4400,44X22R24B
+    4400,44X22R24B
 
 If the panel has a hex at every intersection, simply put the "X" twice:
 
-   4400,44XX
+    4400,44XX
 
 If the panel contains broken horizontal or vertical lines, put in a slash, list the coordinates of broken horizontal lines
 (or, more specifically, the coordinates of the intersection on the left side of the broken line), then after another slash
 list the coordinates of broken vertical lines (the intersection below the broken line - remember, Y=0 is the bottom corner of the panel).
 
-  5500,55/34/32
+    5500,55/34/32
 
+The following lines encode the contents of each cell on the panel. Each line corresponds to one row,
+and the contents of the line describe individual cells.
 
+To describe the contents of each cell, use the following characters:
+
+  * Empty cell - `_`
+  * Colored blob - `O` followed by the character specifying the color
+  * Colored star - `*` followed by the character specifying the color
+  * Group of yellow dots (polymino) - `T` followed by the layout of the group in parentheses;
+  * Rotated group of yellow dots (polymino) - `t` followed by the layout of the group in parentheses.
+
+The following colors are supported:
+
+  * `W` - white
+  * `R` - red
+  * `G` - green
+  * `B` - blue
+  * `C` - cyan
+  * `M` - magenta
+  * `Y` - yellow
+  * `K` - black
+
+Here's the encoding of a very simple puzzle:
+
+    _ _ OWOW
+    _ _ OWOW
+    OKOK_ _
+    OKOK_ _
+
+To describe the layout of polyminos, use `_` to specify empty cells, `\` to separate lines, and any other character to specify
+a non-empty cell. For an example, consider the following tetramino:
+
+    ***
+     *
+
+Here's how it is encoded:
+
+    T(***/_*_)
